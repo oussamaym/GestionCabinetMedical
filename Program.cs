@@ -1,5 +1,14 @@
-var builder = WebApplication.CreateBuilder(args);
+using GestionCabinetMedical.Data;
+using Microsoft.EntityFrameworkCore;
 
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<GCMContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("GCMContext") ?? throw new InvalidOperationException("Connection string 'GCMContext' not found.")));
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+});
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
@@ -19,9 +28,10 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+app.UseSession();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=Login}/{id?}");
 
 app.Run();

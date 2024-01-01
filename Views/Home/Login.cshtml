@@ -1,0 +1,49 @@
+﻿@model GestionCabinetMedical.Models.AuthModel
+
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+}
+
+<style>
+    body {
+        padding-top: 50px; /* Add padding to the top of the page */
+    }
+</style>
+
+<h2 class="text-center">Login</h2>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form asp-action="Login">
+                <!-- Type selection -->
+                <div class="form-outline mb-4">
+                    <label asp-for="TypePersonnel" class="form-label">Vous êtes un</label>
+                    <select asp-for="TypePersonnel" class="form-control">
+                        <option value="Admin" selected></option>
+                        <option value="Patient">Patient</option>
+                        <option value="Medecin">Medecin</option>
+                        <option value="Infirmier">Infirmier(e)</option>
+                    </select>
+                </div>
+
+                <!-- Email input -->
+                <div class="form-outline mb-4">
+                    <label asp-for="Login" class="form-label"></label>
+                    <input asp-for="Login" class="form-control" />
+                </div>
+
+                <!-- Password input -->
+                <div class="form-outline mb-4">
+                    <label asp-for="Password" class="form-label"></label>
+                    <input asp-for="Password" type="password" class="form-control" />
+                </div>
+
+                <!-- Submit button -->
+                <button type="submit" class="btn btn-primary btn-block mb-4">Sign in</button>
+            
+            </form>
+        </div>
+    </div>
+</div>
