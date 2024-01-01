@@ -63,7 +63,7 @@ namespace GestionCabinetMedical.Controllers
                         {
                             return BadRequest("400-01");
                         }
-                        HttpContext.Session.SetString("medecin", utilisateur.Email);
+                        HttpContext.Session.SetString("medecin", utilisateur.Id.ToString());
                         return RedirectToAction("Index", "Medecins");
                     }
                     else if(auth.TypePersonnel == "Infirmier")
@@ -74,7 +74,7 @@ namespace GestionCabinetMedical.Controllers
                         {
                             return BadRequest("400-01");
                         }
-                        HttpContext.Session.SetString("infirmier",utilisateur.Email);
+                        HttpContext.Session.SetString("infirmier", utilisateur.Id.ToString());
                         return RedirectToAction("Index", "Infirmiers");
                     }
                     else if (auth.TypePersonnel == "Patient")
@@ -85,7 +85,7 @@ namespace GestionCabinetMedical.Controllers
                         {
                             return BadRequest("400-01");
                         }
-                        HttpContext.Session.SetString("patient", utilisateur.Email);
+                        HttpContext.Session.SetString("patient", utilisateur.Id.ToString());
                         return RedirectToAction("Index_patient", "Home");
                     }
 

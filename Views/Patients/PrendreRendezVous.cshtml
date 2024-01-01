@@ -1,17 +1,16 @@
 ﻿@model GestionCabinetMedical.Models.RendezVous
 
 @{
-    ViewData["Title"] = "CreateForPatient";
-    Layout = "~/Views/Shared/patient.cshtml";
+    ViewData["Title"] = "PrendreRendezVous";
 }
 
-<h1>CreateForPatient</h1>
+<h1>PrendreRendezVous</h1>
 
 <h4>RendezVous</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="CreateForPatient">
+        <form asp-action="PrendreRendezVous">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Date" class="control-label"></label>
@@ -19,16 +18,8 @@
                 <span asp-validation-for="Date" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="PatientId" class="control-label"></label>
-                <select asp-for="PatientId" class ="form-control" asp-items="ViewBag.PatientId"></select>
-            </div>
-            <div class="form-group">
                 <label asp-for="MedecinId" class="control-label"></label>
                 <select asp-for="MedecinId" class ="form-control" asp-items="ViewBag.MedecinId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="ConsultationId" class="control-label"></label>
-                <select asp-for="ConsultationId" class ="form-control" asp-items="ViewBag.ConsultationId"></select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

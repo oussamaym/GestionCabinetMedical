@@ -14,7 +14,6 @@ namespace GestionCabinetMedical.Models
         public Patient Patient { get; set; }
         public long MedecinId { get; set; }
         public Medecin Medecin { get; set; }
-        public long ConsultationId { get; set; }
         public Consultation? Consultation { get; set; }
     }
 }

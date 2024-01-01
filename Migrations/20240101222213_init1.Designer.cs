@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GestionCabinetMedical.Migrations
 {
     [DbContext(typeof(GCMContext))]
-    [Migration("20240101034803_init")]
-    partial class init
+    [Migration("20240101222213_init1")]
+    partial class init1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,13 +37,16 @@ namespace GestionCabinetMedical.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RendezVousId")
-                        .HasColumnType("int");
+                    b.Property<long>("RendezVousId")
+                        .HasColumnType("bigint");
 
                     b.Property<long>("TraitementId")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("RendezVousId")
+                        .IsUnique();
 
                     b.HasIndex("TraitementId");
 
@@ -164,9 +167,6 @@ namespace GestionCabinetMedical.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<long>("ConsultationId")
-                        .HasColumnType("bigint");
-
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
@@ -177,9 +177,6 @@ namespace GestionCabinetMedical.Migrations
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ConsultationId")
-                        .IsUnique();
 
                     b.HasIndex("MedecinId");
 
@@ -217,23 +214,25 @@ namespace GestionCabinetMedical.Migrations
 
             modelBuilder.Entity("GestionCabinetMedical.Models.Consultation", b =>
                 {
+                    b.HasOne("GestionCabinetMedical.Models.RendezVous", "RendezVous")
+                        .WithOne("Consultation")
+                        .HasForeignKey("GestionCabinetMedical.Models.Consultation", "RendezVousId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("GestionCabinetMedical.Models.Traitement", "Traitement")
                         .WithMany()
                         .HasForeignKey("TraitementId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("RendezVous");
+
                     b.Navigation("Traitement");
                 });
 
             modelBuilder.Entity("GestionCabinetMedical.Models.RendezVous", b =>
                 {
-                    b.HasOne("GestionCabinetMedical.Models.Consultation", "Consultation")
-                        .WithOne("RendezVous")
-                        .HasForeignKey("GestionCabinetMedical.Models.RendezVous", "ConsultationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("GestionCabinetMedical.Models.Medecin", "Medecin")
                         .WithMany("RendezVous")
                         .HasForeignKey("MedecinId")
@@ -246,17 +245,9 @@ namespace GestionCabinetMedical.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Consultation");
-
                     b.Navigation("Medecin");
 
                     b.Navigation("Patient");
-                });
-
-            modelBuilder.Entity("GestionCabinetMedical.Models.Consultation", b =>
-                {
-                    b.Navigation("RendezVous")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("GestionCabinetMedical.Models.Medecin", b =>
@@ -267,6 +258,11 @@ namespace GestionCabinetMedical.Migrations
             modelBuilder.Entity("GestionCabinetMedical.Models.Patient", b =>
                 {
                     b.Navigation("RendezVous");
+                });
+
+            modelBuilder.Entity("GestionCabinetMedical.Models.RendezVous", b =>
+                {
+                    b.Navigation("Consultation");
                 });
 #pragma warning restore 612, 618
         }

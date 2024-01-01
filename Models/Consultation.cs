@@ -10,7 +10,7 @@ namespace GestionCabinetMedical.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
         public string Diagnostic {  get; set; }
-        public int RendezVousId { get; set; } 
+        public long RendezVousId { get; set; } 
         public RendezVous RendezVous { get; set; }
         public long TraitementId { get; set; }
         public Traitement? Traitement { get; set; }

@@ -116,6 +116,25 @@ namespace GestionCabinetMedical.Controllers
             }
             return View(patient);
         }
+        public IActionResult PrendreRendezVous()
+        {
+        
+            ViewData["MedecinId"] = new SelectList(_context.Medecin, "Id", "Nom");
+            return View("PrendreRendezVous");
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> PrendreRendezVous([Bind("Id,Date,PatientId,MedecinId,ConsultationId")] RendezVous rendezVous)
+        {
+           
+                rendezVous.PatientId = long.Parse(HttpContext.Session.GetString("patient"));
+                _context.Add(rendezVous);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Index_patient","Home");
+
+            ViewData["MedecinId"] = new SelectList(_context.Medecin, "Id", "Nom", rendezVous.MedecinId);
+            return View("PrendreRendezVous");
+        }
 
         // GET: Patients/Delete/5
         public async Task<IActionResult> Delete(long? id)

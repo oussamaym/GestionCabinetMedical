@@ -22,7 +22,8 @@ namespace GestionCabinetMedical.Controllers
         // GET: Consultations
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Consultation.ToListAsync());
+            var gCMContext = _context.Consultation.Include(c => c.RendezVous).Include(c => c.Traitement);
+            return View(await gCMContext.ToListAsync());
         }
 
         // GET: Consultations/Details/5
@@ -34,6 +35,8 @@ namespace GestionCabinetMedical.Controllers
             }
 
             var consultation = await _context.Consultation
+                .Include(c => c.RendezVous)
+                .Include(c => c.Traitement)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (consultation == null)
             {
@@ -46,6 +49,8 @@ namespace GestionCabinetMedical.Controllers
         // GET: Consultations/Create
         public IActionResult Create()
         {
+            ViewData["RendezVousId"] = new SelectList(_context.RendezVous, "Id", "Id");
+            ViewData["TraitementId"] = new SelectList(_context.Traitement, "Id", "Id");
             return View();
         }
 
@@ -54,16 +59,21 @@ namespace GestionCabinetMedical.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Diagnostic,RendezVousId")] Consultation consultation)
+        public async Task<IActionResult> Create([Bind("Diagnostic,RendezVousId,TraitementId")] Consultation consultation, long id)
         {
-            if (ModelState.IsValid)
-            {
+            
+            
+                consultation.RendezVousId = id;
                 _context.Add(consultation);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-            }
+            
+
+            ViewData["RendezVousId"] = new SelectList(_context.RendezVous, "Id", "Id", consultation.RendezVousId);
+            ViewData["TraitementId"] = new SelectList(_context.Traitement, "Id", "Id", consultation.TraitementId);
             return View(consultation);
         }
+
 
         // GET: Consultations/Edit/5
         public async Task<IActionResult> Edit(long? id)
@@ -78,6 +88,8 @@ namespace GestionCabinetMedical.Controllers
             {
                 return NotFound();
             }
+            ViewData["RendezVousId"] = new SelectList(_context.RendezVous, "Id", "Id", consultation.RendezVousId);
+            ViewData["TraitementId"] = new SelectList(_context.Traitement, "Id", "Id", consultation.TraitementId);
             return View(consultation);
         }
 
@@ -86,7 +98,7 @@ namespace GestionCabinetMedical.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,Diagnostic,RendezVousId")] Consultation consultation)
+        public async Task<IActionResult> Edit(long id, [Bind("Id,Diagnostic,RendezVousId,TraitementId")] Consultation consultation)
         {
             if (id != consultation.Id)
             {
@@ -113,6 +125,8 @@ namespace GestionCabinetMedical.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["RendezVousId"] = new SelectList(_context.RendezVous, "Id", "Id", consultation.RendezVousId);
+            ViewData["TraitementId"] = new SelectList(_context.Traitement, "Id", "Id", consultation.TraitementId);
             return View(consultation);
         }
 
@@ -125,6 +139,8 @@ namespace GestionCabinetMedical.Controllers
             }
 
             var consultation = await _context.Consultation
+                .Include(c => c.RendezVous)
+                .Include(c => c.Traitement)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (consultation == null)
             {

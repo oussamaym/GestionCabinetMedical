@@ -2,7 +2,6 @@
 
 @{
     ViewData["Title"] = "Index";
-    Layout = "~/Views/Shared/headfooter.cshtml";
 }
 
 <h1>Index</h1>
@@ -22,9 +21,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.Medecin)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Consultation)
-            </th>
             <th></th>
         </tr>
     </thead>
@@ -35,15 +31,16 @@
                 @Html.DisplayFor(modelItem => item.Date)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Patient.Id)
+                @Html.DisplayFor(modelItem => item.Patient.Nom)
+                    @Html.DisplayFor(modelItem => item.Patient.Prenom)
+
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Medecin.Id)
+                @Html.DisplayFor(modelItem => item.Medecin.Nom)
+                    @Html.DisplayFor(modelItem => item.Medecin.Prenom)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Consultation.Id)
-            </td>
-            <td>
+                <a asp-action="Create" asp-controller="Consultations" asp-route-id="@item.Id">Consultation</a>|
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>

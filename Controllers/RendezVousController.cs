@@ -22,10 +22,9 @@ namespace GestionCabinetMedical.Controllers
         // GET: RendezVous
         public async Task<IActionResult> Index()
         {
-            var gCMContext = _context.RendezVous.Include(r => r.Consultation).Include(r => r.Medecin).Include(r => r.Patient);
+            var gCMContext = _context.RendezVous.Include(r => r.Medecin).Include(r => r.Patient);
             return View(await gCMContext.ToListAsync());
         }
-
 
         // GET: RendezVous/Details/5
         public async Task<IActionResult> Details(long? id)
@@ -36,7 +35,6 @@ namespace GestionCabinetMedical.Controllers
             }
 
             var rendezVous = await _context.RendezVous
-                .Include(r => r.Consultation)
                 .Include(r => r.Medecin)
                 .Include(r => r.Patient)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -51,7 +49,6 @@ namespace GestionCabinetMedical.Controllers
         // GET: RendezVous/Create
         public IActionResult Create()
         {
-            ViewData["ConsultationId"] = new SelectList(_context.Set<Consultation>(), "Id", "Id");
             ViewData["MedecinId"] = new SelectList(_context.Medecin, "Id", "Id");
             ViewData["PatientId"] = new SelectList(_context.Patient, "Id", "Id");
             return View();
@@ -62,7 +59,7 @@ namespace GestionCabinetMedical.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Date,PatientId,MedecinId,ConsultationId")] RendezVous rendezVous)
+        public async Task<IActionResult> Create([Bind("Id,Date,PatientId,MedecinId")] RendezVous rendezVous)
         {
             if (ModelState.IsValid)
             {
@@ -70,23 +67,6 @@ namespace GestionCabinetMedical.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ConsultationId"] = new SelectList(_context.Set<Consultation>(), "Id", "Id", rendezVous.ConsultationId);
-            ViewData["MedecinId"] = new SelectList(_context.Medecin, "Id", "Id", rendezVous.MedecinId);
-            ViewData["PatientId"] = new SelectList(_context.Patient, "Id", "Id", rendezVous.PatientId);
-            return View(rendezVous);
-        }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> PrendreRendezVous([Bind("Id,Date,PatientId,MedecinId,ConsultationId")] RendezVous rendezVous)
-        {
-            if (ModelState.IsValid)
-            {
-
-                _context.Add(rendezVous);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["ConsultationId"] = new SelectList(_context.Set<Consultation>(), "Id", "Id", rendezVous.ConsultationId);
             ViewData["MedecinId"] = new SelectList(_context.Medecin, "Id", "Id", rendezVous.MedecinId);
             ViewData["PatientId"] = new SelectList(_context.Patient, "Id", "Id", rendezVous.PatientId);
             return View(rendezVous);
@@ -105,18 +85,18 @@ namespace GestionCabinetMedical.Controllers
             {
                 return NotFound();
             }
-            ViewData["ConsultationId"] = new SelectList(_context.Set<Consultation>(), "Id", "Id", rendezVous.ConsultationId);
             ViewData["MedecinId"] = new SelectList(_context.Medecin, "Id", "Id", rendezVous.MedecinId);
             ViewData["PatientId"] = new SelectList(_context.Patient, "Id", "Id", rendezVous.PatientId);
             return View(rendezVous);
         }
+
 
         // POST: RendezVous/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,Date,PatientId,MedecinId,ConsultationId")] RendezVous rendezVous)
+        public async Task<IActionResult> Edit(long id, [Bind("Id,Date,PatientId,MedecinId")] RendezVous rendezVous)
         {
             if (id != rendezVous.Id)
             {
@@ -143,7 +123,6 @@ namespace GestionCabinetMedical.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ConsultationId"] = new SelectList(_context.Set<Consultation>(), "Id", "Id", rendezVous.ConsultationId);
             ViewData["MedecinId"] = new SelectList(_context.Medecin, "Id", "Id", rendezVous.MedecinId);
             ViewData["PatientId"] = new SelectList(_context.Patient, "Id", "Id", rendezVous.PatientId);
             return View(rendezVous);
@@ -158,7 +137,6 @@ namespace GestionCabinetMedical.Controllers
             }
 
             var rendezVous = await _context.RendezVous
-                .Include(r => r.Consultation)
                 .Include(r => r.Medecin)
                 .Include(r => r.Patient)
                 .FirstOrDefaultAsync(m => m.Id == id);

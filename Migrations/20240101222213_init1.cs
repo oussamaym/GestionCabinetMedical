@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace GestionCabinetMedical.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class init1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -81,27 +81,6 @@ namespace GestionCabinetMedical.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Consultation",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Diagnostic = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    RendezVousId = table.Column<int>(type: "int", nullable: false),
-                    TraitementId = table.Column<long>(type: "bigint", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Consultation", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Consultation_Traitement_TraitementId",
-                        column: x => x.TraitementId,
-                        principalTable: "Traitement",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "RendezVous",
                 columns: table => new
                 {
@@ -109,18 +88,11 @@ namespace GestionCabinetMedical.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     PatientId = table.Column<long>(type: "bigint", nullable: false),
-                    MedecinId = table.Column<long>(type: "bigint", nullable: false),
-                    ConsultationId = table.Column<long>(type: "bigint", nullable: false)
+                    MedecinId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_RendezVous", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_RendezVous_Consultation_ConsultationId",
-                        column: x => x.ConsultationId,
-                        principalTable: "Consultation",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_RendezVous_Medecin_MedecinId",
                         column: x => x.MedecinId,
@@ -135,16 +107,43 @@ namespace GestionCabinetMedical.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Consultation",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Diagnostic = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RendezVousId = table.Column<long>(type: "bigint", nullable: false),
+                    TraitementId = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Consultation", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Consultation_RendezVous_RendezVousId",
+                        column: x => x.RendezVousId,
+                        principalTable: "RendezVous",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Consultation_Traitement_TraitementId",
+                        column: x => x.TraitementId,
+                        principalTable: "Traitement",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Consultation_RendezVousId",
+                table: "Consultation",
+                column: "RendezVousId",
+                unique: true);
+
             migrationBuilder.CreateIndex(
                 name: "IX_Consultation_TraitementId",
                 table: "Consultation",
                 column: "TraitementId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_RendezVous_ConsultationId",
-                table: "RendezVous",
-                column: "ConsultationId",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_RendezVous_MedecinId",
@@ -161,22 +160,22 @@ namespace GestionCabinetMedical.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Consultation");
+
+            migrationBuilder.DropTable(
                 name: "Infirmier");
 
             migrationBuilder.DropTable(
                 name: "RendezVous");
 
             migrationBuilder.DropTable(
-                name: "Consultation");
+                name: "Traitement");
 
             migrationBuilder.DropTable(
                 name: "Medecin");
 
             migrationBuilder.DropTable(
                 name: "Patient");
-
-            migrationBuilder.DropTable(
-                name: "Traitement");
         }
     }
 }
