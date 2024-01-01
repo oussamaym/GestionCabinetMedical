@@ -86,7 +86,7 @@ namespace GestionCabinetMedical.Controllers
                             return BadRequest("400-01");
                         }
                         HttpContext.Session.SetString("patient", utilisateur.Email);
-                        return RedirectToAction("Index", "Patients");
+                        return RedirectToAction("Index_patient", "Home");
                     }
 
                 }
@@ -98,6 +98,14 @@ namespace GestionCabinetMedical.Controllers
 
             return View(auth);
         }
+        public IActionResult Index_patient()
+        {
+			if (HttpContext.Session.GetString("patient") != null)
+            {
+				return View("Index_patient");
+			}
+			return RedirectToAction("Login");
+		}
 
         public IActionResult Privacy()
         {
